@@ -6,17 +6,15 @@ Update to [this 2021 post](https://dev.to/tylerlwsmith/read-selected-text-out-lo
 
 1. Install Piper TTS. Piper's dependencies can be picky about Python version, so using uv as the package manager can be helpful since it can manage the Python itnerpreter version as well.
 
-    $ sudo apt install python-astral-uv
-    $ mkdir ~/piper && cd ~/piper
-    $ uv init --python-version 3.11
-    $ uv tool install piper-tts
-
+        $ sudo apt install python-astral-uv
+        $ mkdir ~/piper && cd ~/piper
+        $ uv init --python-version 3.11
+        $ uv tool install piper-tts
 2. Download voices from https://github.com/rhasspy/piper/blob/master/VOICES.md In our example, we use the US English voice lessac medium, and store both the model (.onmx) and config (.json) in ~/piper.
 3. Confirm you can generate and play speech on demand:
 
-    $ echo "hi" | piper --model ~/piper/en_US-lessac-medium.onnx | aplay -r 22050 -f S16_LE -t raw -
-
-3. Follow all the steps from the above blog post, but drop in the `read-selected-text` script from this repository instead of the `espeak`-based script.
+        $ echo "hi" | piper --model ~/piper/en_US-lessac-medium.onnx | aplay -r 22050 -f S16_LE -t raw -
+4. Follow all the steps from the above blog post, but drop in the `read-selected-text` script from this repository instead of the `espeak`-based script.
 
 ## Full-screen magnification
 
@@ -38,8 +36,8 @@ The documented technique using `xbindkeys` only works on X11, not Wayland. For a
 Following the suggestion to use InputRemapper, here's how to map increase/decrease zoom actions to the back/forward buttons on a Logitech MX Vertical mouse:
 
 1. Install Input Remapper:
-
-    $ sudo apt install input-remapper
+    
+        $ sudo apt install input-remapper
 
 2. Launch the Input Remapper GUI, and create a new preset for Logitech MX Vertical Advanced Ergonomic Mouse. Make sure the "Autoload" toggle is enabled.
 3. Add two inputs on the left. Use the Record button to capture pressing the relevant mouse buttons, which should be shown as "Button EXTRA" and "Button SIDE".
