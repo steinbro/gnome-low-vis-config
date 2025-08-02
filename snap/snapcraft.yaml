@@ -1,0 +1,37 @@
+name: steinbro-speak-selection
+base: core24
+version: '0.1'
+summary: Speak selected text
+description: |
+  Provides a command that can be bound to a keyboard shortcut to speak the selected text in the current window.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+parts:
+  read-selected-text:
+    plugin: dump
+    source: .
+    organize:
+      read-selected-text-espeak-ng: bin/read-selected-text
+    stage-packages:
+      # text-to-speech engine
+      - espeak-ng
+      - espeak-ng-data
+      # audio output
+      - libpulse0
+      # clipboard access
+      - xclip
+      # selected text access
+      - xsel
+
+apps:
+  read-selected-text:
+    command: bin/read-selected-text
+    plugs:
+      - audio-playback
+    environment:
+      ESPEAK_DATA_PATH: ${SNAP}/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/espeak-ng-data
+      # https://forum.snapcraft.io/t/snap-example-with-audio-playback-and-play-sox-command/24067/9?u=dsteinbrook
+      LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pulseaudio
+      PULSE_SERVER: unix:/run/user/1000/pulse/native
