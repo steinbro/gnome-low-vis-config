@@ -13,31 +13,17 @@ parts:
     plugin: dump
     source: .
     organize:
-      read-selected-text: bin/read-selected-text
+      read-selected-text-espeak-ng: bin/read-selected-text
     stage-packages:
+      # text-to-speech engine
+      - espeak-ng
+      - espeak-ng-data
       # audio output
       - libpulse0
-      - pulseaudio-utils
-      - ffmpeg
       # clipboard access
       - xclip
       # selected text access
       - xsel
-
-  piper-tts:
-    plugin: python
-    source: .
-    python-packages:
-      - piper-tts
-
-  fetch-piper-voice-model:
-    plugin: dump
-    source: .
-    override-pull: |
-      curl -sSLO https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/lessac/medium/en_US-lessac-medium.onnx?download=true
-      curl -sSLO https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json?download=true
-    build-packages:
-    - curl
 
 apps:
   read-selected-text:
@@ -45,6 +31,7 @@ apps:
     plugs:
       - audio-playback
     environment:
+      ESPEAK_DATA_PATH: ${SNAP}/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/espeak-ng-data
       # https://forum.snapcraft.io/t/snap-example-with-audio-playback-and-play-sox-command/24067/9?u=dsteinbrook
       LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pulseaudio
       PULSE_SERVER: unix:/run/user/1000/pulse/native

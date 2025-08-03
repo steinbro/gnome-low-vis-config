@@ -8,7 +8,7 @@ Update to [this 2021 post](https://dev.to/tylerlwsmith/read-selected-text-out-lo
 
         $ sudo apt install python-astral-uv
         $ mkdir ~/piper && cd ~/piper
-        $ uv init --python-version 3.11
+        $ uv init --python 3.11
         $ uv tool install piper-tts
 2. Download voices from https://github.com/rhasspy/piper/blob/master/VOICES.md In our example, we use the US English voice lessac medium, and store both the model (.onmx) and config (.json) in ~/piper.
 3. Confirm you can generate and play speech on demand:

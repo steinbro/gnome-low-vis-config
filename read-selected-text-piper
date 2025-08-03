@@ -1,0 +1,17 @@
+#! /bin/bash
+
+pacat_pid=$(pidof pacat)
+
+# Use the --length_scale argument to adjust speed (Smaller is faster).
+# Setting --noise_scale and --noise_w to 0 appears to help improve
+# enunciation at higher speeds.
+
+if [ -z "$pacat_pid"]
+then
+    xclip -out -selection primary | xclip -in -selection clipboard
+    xsel --clipboard | tr "\n" " " \
+        | piper --model $SNAP/en_US-lessac-medium.onnx --length_scale 0.1 --noise_w 0 --noise_scale 0 #\
+        | pacat --raw --rate=44100 --channels=2 --format=s16le
+else 
+    kill $pacat_pid
+fi
