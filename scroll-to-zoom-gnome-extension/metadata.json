@@ -1,0 +1,10 @@
+{
+  "uuid": "scroll-to-zoom@local",
+  "name": "Scroll to Zoom",
+  "description": "Use Ctrl + Super + mouse wheel to change GNOME Shell magnifier zoom.",
+  "version": 1,
+  "js-version": 2,
+  "shell-version": ["43", "44", "45", "46", "47", "48", "49", "50"],
+  "url": "https://github.com/steinbro/gnome-low-vis-config/",
+  "settings-schema": null
+}

@@ -31,6 +31,12 @@ To reduce jumping, disable caret tracking and focus tracking like so:
 
 The keyboard shortcuyts to increase/decrease zoom are by default bound to Alt+Super+= and Alt+Super+- respectively. It can be convenient to have a mouse shortcut as well.
 
+#### Option 1: GNOME extension
+
+Just install the [Better Desktop Zoom extension](https://extensions.gnome.org/extension/7263/better-desktop-zoom/) to enable zoom via  Ctrl + Super + scroll. Scroll here includes both the scroll wheel on a traditional mouse, or two-finger vertical motion on a touchpad.
+
+#### Option 2: Input Remapper
+
 The documented technique using `xbindkeys` only works on X11, not Wayland. For an explanation, see [Why does xbindkeys not get the thumbwheel mouse buttons of Logitech MX Master anymore?](https://unix.stackexchange.com/a/785901)
 
 Following the suggestion to use InputRemapper, here's how to map increase/decrease zoom actions to the back/forward buttons on a Logitech MX Vertical mouse:
