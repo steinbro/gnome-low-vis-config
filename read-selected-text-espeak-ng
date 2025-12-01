@@ -1,6 +1,6 @@
 #! /bin/bash
 
-espeak_pid=$(pidof espeak)
+espeak_pid=$(pidof espeak-ng)
 
 # espeak argument reference:
 # -a for volume. Max 200
