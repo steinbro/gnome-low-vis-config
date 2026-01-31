@@ -1,0 +1,9 @@
+{
+  "uuid": "speak-selection@steinbro.github.io",
+  "name": "Speech Selection",
+  "description": "Speak the currently selected text",
+  "shell-version": ["49"],
+  "url": "",
+  "version": 1,
+  "settings-schema": "org.gnome.shell.extensions.speak-selection"
+}

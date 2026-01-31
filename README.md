@@ -1,20 +1,12 @@
-This repository contains some enhancements to the default GNOME magnification and speech settings on Ubuntu 25.04.
+This repository contains some enhancements to the default GNOME magnification and speech settings on Ubuntu 25.10.
 
 ## Speak selection with modern text-to-speech voices
 
 Update to [this 2021 post](https://dev.to/tylerlwsmith/read-selected-text-out-loud-on-ubuntu-linux-45lj) using the much more natural-sounding [Piper](https://github.com/rhasspy/piper) text-to-speech engine.
 
-1. Install Piper TTS. Piper's dependencies can be picky about Python version, so using uv as the package manager can be helpful since it can manage the Python itnerpreter version as well.
-
-        $ sudo apt install python-astral-uv
-        $ mkdir ~/piper && cd ~/piper
-        $ uv init --python 3.11
-        $ uv tool install piper-tts
-2. Download voices from https://github.com/rhasspy/piper/blob/master/VOICES.md In our example, we use the US English voice lessac medium, and store both the model (.onmx) and config (.json) in ~/piper.
-3. Confirm you can generate and play speech on demand:
-
-        $ echo "hi" | piper --model ~/piper/en_US-lessac-medium.onnx | aplay -r 22050 -f S16_LE -t raw -
-4. Follow all the steps from the above blog post, but drop in the `read-selected-text` script from this repository instead of the `espeak`-based script.
+1. Install the Pied text-to-speech voice manager from the [Snap Store](https://snapcraft.io/pied).
+2. Launch Pied, and install your preferred voice.
+3. Follow all the steps from the above blog post, but drop in the `read-selected-text` script from this repository instead of the `espeak`-based script.
 
 ## Full-screen magnification
 
@@ -29,7 +21,7 @@ To reduce jumping, disable caret tracking and focus tracking like so:
 
 ### Set mouse shortcuts
 
-The keyboard shortcuyts to increase/decrease zoom are by default bound to Alt+Super+= and Alt+Super+- respectively. It can be convenient to have a mouse shortcut as well.
+The keyboard shortcuts to increase/decrease zoom are by default bound to Alt+Super+= and Alt+Super+- respectively. It can be convenient to have a mouse shortcut as well.
 
 #### Option 1: GNOME extension
 
@@ -51,4 +43,4 @@ Following the suggestion to use InputRemapper, here's how to map increase/decrea
     1. For input "Button EXTRA", use output "Alt_L+Super_L+equal".
     2. For input "Button SIDE", use output "A;t_L+Super_L+minux".
 
-The resulting configuration file is normally generated under ~/.config/input-remapper-2/. An example after following the above steps is found in this repository under input-remapper-2. 
+The resulting configuration file is normally generated under ~/.config/input-remapper-2/. An example after following the above steps is found in this repository under input-remapper-2.
