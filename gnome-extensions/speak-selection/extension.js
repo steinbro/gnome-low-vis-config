@@ -1,13 +1,17 @@
 import St from "gi://St";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
-import * as Main from "resource:///org/gnome/shell/ui/main.js";
-import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import Shell from "gi://Shell";
 import Meta from "gi://Meta";
+import * as Main from "resource:///org/gnome/shell/ui/main.js";
+import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js";
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js";
+import * as Slider from "resource:///org/gnome/shell/ui/slider.js";
+import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 
 const KEY_SPEAK = "run-speech";
 const KEY_STOP = "stop-speech";
+const KEY_RATE = "speech-rate";
 
 export default class SpeechExtension extends Extension {
   enable() {
@@ -15,21 +19,64 @@ export default class SpeechExtension extends Extension {
       "org.gnome.shell.extensions.speak-selection",
     );
 
-    // Register Speak Shortcut
+    // Create Panel Indicator
+    this._indicator = new PanelMenu.Button(0.5, "Speech Tools", false);
+    this._indicator.add_child(
+      new St.Icon({
+        icon_name: "chat-bubble-text-symbolic",
+        style_class: "system-status-icon",
+      }),
+    );
+
+    // Headline / Label
+    let headline = new PopupMenu.PopupBaseMenuItem({
+      activate: false,
+      reactive: false,
+    });
+    headline.add_child(
+      new St.Label({
+        text: "Speech Rate",
+        style_class: "popup-menu-header",
+      }),
+    );
+    this._indicator.menu.addMenuItem(headline);
+
+    // Slider container
+    let sliderItem = new PopupMenu.PopupBaseMenuItem({ activate: false });
+
+    // The slider itself (requires a value between 0 and 1)
+    this._slider = new Slider.Slider(
+      (this._settings.get_int(KEY_RATE) + 100) / 200,
+    );
+
+    // Set it to expand to fill the menu width
+    this._slider.x_expand = true;
+
+    // Connect the signal
+    this._slider.connect("notify::value", () => {
+      let rate = Math.round(this._slider.value * 200 - 100);
+      this._settings.set_int(KEY_RATE, rate);
+    });
+
+    sliderItem.add_child(this._slider);
+    this._indicator.menu.addMenuItem(sliderItem);
+
+    Main.panel.addToStatusArea(this.uuid, this._indicator);
+
+    // Keybindings
     Main.wm.addKeybinding(
       KEY_SPEAK,
       this._settings,
       Meta.KeyBindingFlags.NONE,
-      Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+      Shell.ActionMode.NORMAL,
       () => this._speakSelection(),
     );
 
-    // Register Stop Shortcut
     Main.wm.addKeybinding(
       KEY_STOP,
       this._settings,
       Meta.KeyBindingFlags.NONE,
-      Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+      Shell.ActionMode.NORMAL,
       () => this._runCommand("spd-say -S"),
     );
   }
@@ -37,6 +84,8 @@ export default class SpeechExtension extends Extension {
   disable() {
     Main.wm.removeKeybinding(KEY_SPEAK);
     Main.wm.removeKeybinding(KEY_STOP);
+    this._indicator.destroy();
+    this._indicator = null;
     this._settings = null;
   }
 
@@ -44,18 +93,17 @@ export default class SpeechExtension extends Extension {
     try {
       GLib.spawn_command_line_async(command);
     } catch (e) {
-      console.error(`Speech Extension Error: ${e.message}`);
+      console.error(e);
     }
   }
 
   _speakSelection() {
+    const rate = this._settings.get_int(KEY_RATE);
     const clipboard = St.Clipboard.get_default();
     clipboard.get_text(St.ClipboardType.PRIMARY, (clipboard, text) => {
       if (!text || text.trim() === "") return;
-
-      // Sanitize text: escape quotes for shell safety
-      const sanitizedText = text.replace(/"/g, '\\"');
-      this._runCommand(`spd-say "${sanitizedText}"`);
+      const sanitizedText = text.replace(/"/g, '\\"').replace(/\$/g, "\\$");
+      this._runCommand(`spd-say -r ${rate} "${sanitizedText}"`);
     });
   }
 }

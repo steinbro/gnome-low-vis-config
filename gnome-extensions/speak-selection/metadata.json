@@ -1,6 +1,6 @@
 {
   "uuid": "speak-selection@steinbro.github.io",
-  "name": "Speech Selection",
+  "name": "Speak Selection",
   "description": "Speak the currently selected text",
   "shell-version": ["49"],
   "url": "",

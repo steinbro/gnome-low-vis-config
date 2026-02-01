@@ -2,6 +2,11 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.speak-selection" path="/org/gnome/shell/extensions/speak-selection/">
 
+    <key name="speech-rate" type="i">
+      <default>0</default>
+      <summary>Speech rate</summary>
+    </key>
+
     <key name="run-speech" type="as">
       <default>['&lt;Super&gt;&lt;Shift&gt;k']</default>
       <summary>Speak current selection</summary>
