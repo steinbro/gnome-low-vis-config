@@ -5,18 +5,23 @@ import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/
 export default class SpeechPreferences extends ExtensionPreferences {
   fillPreferencesWindow(window) {
     const page = new Adw.PreferencesPage();
-    const group = new Adw.PreferencesGroup({
-      title: "Keyboard Shortcuts",
-      description: "Set your preferred shortcuts for Speech Dispatcher",
+    const group = new Adw.PreferencesGroup({ title: "General Settings" });
+
+    const row = new Adw.SwitchRow({
+      title: "Show Panel Icon",
+      subtitle: "Toggle the speech rate menu in the top bar",
     });
 
-    // This adds a simple info row.
-    // Note: For a full shortcut recorder, more complex widgetry is needed,
-    // but this allows the "Settings" button to at least open.
-    const row = new Adw.ActionRow({
-      title: "Configure via Dconf or Shortcuts Settings",
-      subtitle: "Standard GNOME shortcut recorder requires extra boilerplate.",
-    });
+    // Bind the switch to our GSettings key
+    const settings = this.getSettings(
+      "org.gnome.shell.extensions.speak-selection",
+    );
+    settings.bind(
+      "show-indicator",
+      row,
+      "active",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
 
     group.add(row);
     page.add(group);

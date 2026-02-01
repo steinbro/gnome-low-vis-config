@@ -18,6 +18,52 @@ export default class SpeechExtension extends Extension {
     this._settings = this.getSettings(
       "org.gnome.shell.extensions.speak-selection",
     );
+    this._indicator = null;
+
+    // Watch for changes to the toggle
+    this._settingsId = this._settings.connect("changed::show-indicator", () => {
+      this._updateIndicatorVisibility();
+    });
+
+    this._updateIndicatorVisibility();
+
+    // Keybindings
+    Main.wm.addKeybinding(
+      KEY_SPEAK,
+      this._settings,
+      Meta.KeyBindingFlags.NONE,
+      Shell.ActionMode.NORMAL,
+      () => this._speakSelection(),
+    );
+
+    Main.wm.addKeybinding(
+      KEY_STOP,
+      this._settings,
+      Meta.KeyBindingFlags.NONE,
+      Shell.ActionMode.NORMAL,
+      () => this._runCommand("spd-say -S"),
+    );
+  }
+
+  _updateIndicatorVisibility() {
+    const shouldShow = this._settings.get_boolean("show-indicator");
+
+    if (shouldShow && !this._indicator) {
+      this._createIndicator();
+    } else if (!shouldShow && this._indicator) {
+      this._indicator.destroy();
+      this._indicator = null;
+    }
+  }
+
+  _createIndicator() {
+    this._indicator = new PanelMenu.Button(0.5, "Speech Tools", false);
+    this._indicator.add_child(
+      new St.Icon({
+        icon_name: "chat-bubble-text-symbolic",
+        style_class: "system-status-icon",
+      }),
+    );
 
     // Create Panel Indicator
     this._indicator = new PanelMenu.Button(0.5, "Speech Tools", false);
@@ -62,30 +108,16 @@ export default class SpeechExtension extends Extension {
     this._indicator.menu.addMenuItem(sliderItem);
 
     Main.panel.addToStatusArea(this.uuid, this._indicator);
-
-    // Keybindings
-    Main.wm.addKeybinding(
-      KEY_SPEAK,
-      this._settings,
-      Meta.KeyBindingFlags.NONE,
-      Shell.ActionMode.NORMAL,
-      () => this._speakSelection(),
-    );
-
-    Main.wm.addKeybinding(
-      KEY_STOP,
-      this._settings,
-      Meta.KeyBindingFlags.NONE,
-      Shell.ActionMode.NORMAL,
-      () => this._runCommand("spd-say -S"),
-    );
   }
 
   disable() {
+    this._settings.disconnect(this._settingsId);
     Main.wm.removeKeybinding(KEY_SPEAK);
     Main.wm.removeKeybinding(KEY_STOP);
-    this._indicator.destroy();
-    this._indicator = null;
+    if (this._indicator) {
+      this._indicator.destroy();
+      this._indicator = null;
+    }
     this._settings = null;
   }
 
