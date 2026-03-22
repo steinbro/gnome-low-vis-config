@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Flatten all newlines so TTS reads a continuous sentence.
+# Normalize compatibility Unicode (e.g., styled math letters) to plain text.
+# Replace emoji glyphs with readable token names for speech.
+tr '\n' ' ' \
+    | uconv -x Any-NFKC \
+    | python3 -c "import sys, emoji; print(emoji.demojize(sys.stdin.read(), delimiters=(' ', ' ')))"

@@ -7,10 +7,14 @@ espeak_pid=$(pidof espeak)
 # -p for pitch.  0 to 99, default is 50
 # -v for voice
 
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 if [ -z "$espeak_pid"]
 then
     xclip -out -selection primary | xclip -in -selection clipboard
-    xsel --clipboard | tr "\n" " " | uconv -x Any-NFKC | espeak -a 200 -p 60 -s 400 # -v mb-us2
+    xsel --clipboard \
+        | "$script_dir/format_speakable" \
+        | espeak -a 200 -p 60 -s 400 # -v mb-us2
 else 
     kill $espeak_pid
 fi

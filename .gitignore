@@ -1,3 +1,5 @@
 *.snap
 *.wav
 gschemas.compiled
+__pytcache__
+*.pyc
