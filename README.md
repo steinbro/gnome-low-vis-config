@@ -6,7 +6,7 @@ Update to [this 2021 post](https://dev.to/tylerlwsmith/read-selected-text-out-lo
 
 1. Install the Pied text-to-speech voice manager from the [Snap Store](https://snapcraft.io/pied).
 2. Launch Pied, and install your preferred voice.
-3. Follow all the steps from the above blog post, but drop in the `read-selected-text` script from this repository instead of the `espeak`-based script.
+3. Install the [Speak Selection extension](https://github.com/steinbro/gnome-speak-selection). Alternatively, follow all the steps from the above blog post, but drop in the `read-selected-text` script from the `speak-selection` directory in this repository instead of the `espeak`-based script.
 
 ## Full-screen magnification
 
